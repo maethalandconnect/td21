@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ระบบสร้างตัวอย่างการเขียนหนังสือมอบอำนาจ - สำนักงานที่ดินจังหวัดลำปาง สาขาแม่ทะ</title>
+  <title>ระบบสร้างตัวอย่างการเขียนหนังสือมอบอำนาจ - สาขาแม่ทะ</title>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -39,6 +39,15 @@
     .btn-freq-topic.active { background: linear-gradient(135deg, #0047AB 0%, #1e3a8a 100%); color: #ffffff; border-color: #1e3a8a; box-shadow: 0 4px 12px rgba(0, 71, 171, 0.3); }
     .btn-freq-topic .freq-rank { background: #dbeafe; color: #1e40af; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; transition: 0.2s; }
     .btn-freq-topic:hover .freq-rank, .btn-freq-topic.active .freq-rank { background: rgba(255,255,255,0.25); color: #fff; }
+
+    /* สไตล์สำหรับตัวเลือกสิ่งปลูกสร้าง 4 ช่อง */
+    .building-options-box { background: #f8fafc; border: 1.5px solid #cbd5e1; border-radius: 12px; padding: 16px 18px; width: 100%; }
+    .building-options-header { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 12px; display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .building-options-header span.sub-choice { color: #0047AB; background: #dbeafe; padding: 3px 10px; border-radius: 8px; font-size: 14px; }
+    .building-checkbox-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .building-checkbox-label { display: flex; align-items: center; gap: 10px; cursor: pointer; color: #1e293b; font-weight: 600; background: #ffffff; padding: 12px 14px; border-radius: 10px; border: 1.5px solid #e2e8f0; font-size: 15px; transition: all 0.2s ease; }
+    .building-checkbox-label:hover { border-color: #93c5fd; background: #eff6ff; }
+    .building-checkbox-label input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #0047AB; flex-shrink: 0; }
 
     /* สไตล์สำหรับระบบหลังบ้านเจ้าหน้าที่ */
     .wizard-steps { display: flex; background: #0f172a; color: white; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
@@ -112,6 +121,7 @@
 
     .web-footer { text-align: center; font-size: 14px; color: #64748b; margin-top: 10px; margin-bottom: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
     
+    /* สไตล์ Modern สำหรับสมาร์ทโฟน */
     @media (max-width: 768px) {
       body { padding: 10px; }
       .top-actions { flex-direction: column; align-items: stretch; }
@@ -132,6 +142,7 @@
       
       .frequent-grid { flex-direction: column; }
       .btn-freq-topic { width: 100%; justify-content: flex-start; border-radius: 12px; padding: 12px 16px; }
+      .building-checkbox-grid { grid-template-columns: 1fr; }
       
       .step-actions { flex-direction: column; gap: 12px; align-items: stretch; margin-top: 15px; }
       .step-actions .action-group { flex-direction: column; width: 100%; display: flex; gap: 10px; }
@@ -251,6 +262,35 @@
           <input type="checkbox" id="in_agent_both" onchange="updatePreview()" style="width: 22px; height: 22px; cursor: pointer;">
           กรณีผู้รับมอบอำนาจเป็นตัวแทนอีกฝ่ายหนึ่งด้วย (คลิกเพื่อเพิ่มข้อความยินยอมต่อท้ายอัตโนมัติ)
         </label>
+      </div>
+    </div>
+
+    <!-- ส่วนที่เพิ่มใหม่: เช็คบ็อกซ์ เรื่องสิ่งปลูกสร้าง (มี/ไม่มี) จำนวน 4 ช่อง -->
+    <div class="input-row">
+      <div class="input-item">
+        <div class="building-options-box">
+          <div class="building-options-header">
+            🏠 เรื่องสิ่งปลูกสร้าง (มี/ไม่มี) : <span class="sub-choice">/พร้อมสิ่งปลูกสร้าง  /ไม่มีสิ่งปลูกสร้าง</span>
+          </div>
+          <div class="building-checkbox-grid">
+            <label class="building-checkbox-label">
+              <input type="checkbox" id="in_bldg_with" onchange="onBuildingCheckboxChange('in_bldg_with')">
+              พร้อมสิ่งปลูกสร้าง
+            </label>
+            <label class="building-checkbox-label">
+              <input type="checkbox" id="in_bldg_without" onchange="onBuildingCheckboxChange('in_bldg_without')">
+              ไม่มีสิ่งปลูกสร้าง
+            </label>
+            <label class="building-checkbox-label">
+              <input type="checkbox" id="in_bldg_unrelated" onchange="onBuildingCheckboxChange('in_bldg_unrelated')">
+              ไม่เกี่ยวกับสิ่งปลูกสร้าง
+            </label>
+            <label class="building-checkbox-label">
+              <input type="checkbox" id="in_bldg_exclude" onchange="onBuildingCheckboxChange('in_bldg_exclude')">
+              ไม่รวมสิ่งปลูกสร้าง
+            </label>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -504,6 +544,76 @@
   let surveyTimer = null;
   let ratingVal = 0;
 
+  // ข้อมูลตัวเลือกสิ่งปลูกสร้างทั้ง 4 กรณี
+  const BUILDING_OPTIONS = {
+    'in_bldg_with': {
+      subjectSuffix: ' พร้อมสิ่งปลูกสร้าง',
+      mngSuffix: ' พร้อมสิ่งปลูกสร้าง (บ้านไม้/ตึก/ปูน ........ชั้น เลขที่ ......... ตำบล.........อำเภอ.......จังหวัด)'
+    },
+    'in_bldg_without': {
+      subjectSuffix: ' ไม่มีสิ่งปลูกสร้าง',
+      mngSuffix: ' ไม่มีสิ่งปลูกสร้าง'
+    },
+    'in_bldg_unrelated': {
+      subjectSuffix: ' ไม่เกี่ยวกับสิ่งปลูกสร้าง',
+      mngSuffix: ' ไม่เกี่ยวกับสิ่งปลูกสร้าง'
+    },
+    'in_bldg_exclude': {
+      subjectSuffix: ' ไม่รวมสิ่งปลูกสร้าง',
+      mngSuffix: ' ไม่รวมสิ่งปลูกสร้าง'
+    }
+  };
+
+  // เมื่อคลิกเลือกเช็คบ็อกซ์สิ่งปลูกสร้าง (ให้เลือกได้ทีละ 1 ช่อง และอัปเดตข้อความทันที)
+  function onBuildingCheckboxChange(clickedId) {
+    const clickedEl = document.getElementById(clickedId);
+    if (clickedEl && clickedEl.checked) {
+      Object.keys(BUILDING_OPTIONS).forEach(id => {
+        if (id !== clickedId) {
+          const el = document.getElementById(id);
+          if (el) el.checked = false;
+        }
+      });
+    }
+    applyBuildingOptionToTextarea();
+    updatePreview();
+  }
+
+  function getSelectedBuildingOption() {
+    for (let id in BUILDING_OPTIONS) {
+      const el = document.getElementById(id);
+      if (el && el.checked) return BUILDING_OPTIONS[id];
+    }
+    return null;
+  }
+
+  // ฟังก์ชันแทรก/ปรับปรุงข้อความสิ่งปลูกสร้างต่อท้ายคำว่า "เครื่องหมายข้างบนนี้" ในช่องอำนาจจัดการ
+  function applyBuildingOptionToTextarea() {
+    const textarea = document.getElementById('managementDetail');
+    if (!textarea) return;
+    let text = textarea.value;
+    if (!text) return;
+
+    // ลบข้อความสิ่งปลูกสร้างเดิมที่อาจเคยแทรกไว้ก่อนหน้า
+    Object.values(BUILDING_OPTIONS).forEach(opt => {
+      text = text.replace('เครื่องหมายข้างบนนี้' + opt.mngSuffix, 'เครื่องหมายข้างบนนี้');
+      if (text.endsWith(opt.mngSuffix)) {
+        text = text.slice(0, -opt.mngSuffix.length);
+      }
+    });
+
+    // แทรกข้อความใหม่ต่อท้าย "เครื่องหมายข้างบนนี้"
+    const selectedOpt = getSelectedBuildingOption();
+    if (selectedOpt) {
+      if (text.includes('เครื่องหมายข้างบนนี้')) {
+        text = text.replace('เครื่องหมายข้างบนนี้', 'เครื่องหมายข้างบนนี้' + selectedOpt.mngSuffix);
+      } else {
+        text = text.trimEnd() + selectedOpt.mngSuffix;
+      }
+    }
+    textarea.value = text;
+  }
+
   // ฟังก์ชันกลางสำหรับเรียกใช้งาน Backend (รองรับทั้งบน GitHub Pages และบน GAS โดยตรง)
   async function callBackendAPI(action, payload = {}) {
     // 1. กรณีรันอยู่บน Google Apps Script โดยตรง
@@ -562,7 +672,6 @@
     let badge = document.getElementById('sampleStatusBadge');
     try {
       if (typeof google !== 'undefined' && google.script && google.script.run) {
-        // กรณีรันใน GAS
         const subjects = await callBackendAPI('getSubjectData');
         populateDropdowns(subjects);
         const counts = await callBackendAPI('getTopTopicsCount');
@@ -826,7 +935,10 @@
     const topicVal = document.getElementById('dd_topic').value;
     if(cat && proc && topicVal) {
       const item = subjectData.find(i => i.category === cat && i.process === proc && i.topic === topicVal);
-      if(item) document.getElementById('managementDetail').value = item.detail;
+      if(item) {
+        document.getElementById('managementDetail').value = item.detail;
+        applyBuildingOptionToTextarea();
+      }
     } else {
       document.getElementById('managementDetail').value = "";
     }
@@ -894,11 +1006,32 @@
       if(outEl) outEl.innerText = val;
     });
 
+    const selectedBldg = getSelectedBuildingOption();
+
+    // 1. อัปเดตช่อง "เรื่อง" พร้อมต่อท้ายสถานะสิ่งปลูกสร้างที่เลือก
     const ddTopic = document.getElementById('dd_topic');
     let subjectText = ddTopic ? (ddTopic.value || '') : '';
+    if (selectedBldg) {
+      if (subjectText.trim() !== '') {
+        subjectText += selectedBldg.subjectSuffix;
+      } else {
+        subjectText = selectedBldg.subjectSuffix.trim();
+      }
+    }
     document.getElementById('out_subject').innerHTML = highlightTextInBrackets(subjectText);
     
+    // 2. อัปเดตช่อง "อำนาจจัดการ" พร้อมตรวจสอบข้อความต่อท้าย "เครื่องหมายข้างบนนี้"
     let mngText = document.getElementById('managementDetail').value;
+    if (selectedBldg && !mngText.includes(selectedBldg.mngSuffix.trim())) {
+      if (mngText.includes('เครื่องหมายข้างบนนี้')) {
+        mngText = mngText.replace('เครื่องหมายข้างบนนี้', 'เครื่องหมายข้างบนนี้' + selectedBldg.mngSuffix);
+      } else if (mngText.trim() !== '') {
+        mngText = mngText.trimEnd() + selectedBldg.mngSuffix;
+      } else {
+        mngText = selectedBldg.mngSuffix.trim();
+      }
+    }
+
     if (document.getElementById('in_agent_both').checked) {
       if (mngText.trim() !== "") mngText += " ";
       mngText += "และยินยอมให้ผู้รับมอบอำนาจเข้าทำการในนามตนเองและเป็นตัวแทนอีกฝ่ายหนึ่งด้วย";
