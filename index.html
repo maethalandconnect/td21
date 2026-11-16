@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ระบบสร้างตัวอย่างการเขียนหนังสือมอบอำนาจ - สาขาแม่ทะ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Sarabun', sans-serif; background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%); min-height: 100vh; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    
+    .top-actions { width: 100%; max-width: 900px; display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; }
+    .btn-download-blank { background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); color: white; padding: 14px 20px; font-size: 18px; font-weight: bold; border-radius: 12px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3); flex: 1; transition: 0.2s; text-align: center; }
+    .btn-download-blank:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(243, 156, 18, 0.4); }
+    
+    .btn-admin-top { background: #1e293b; color: #f8fafc; padding: 14px 18px; font-size: 15px; font-weight: bold; border-radius: 12px; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.12); transition: 0.2s; font-family: 'Sarabun'; }
+    .btn-admin-top:hover { background: #0f172a; transform: translateY(-2px); }
+
+    .wizard-container { width: 100%; max-width: 900px; background: #fff; padding: 0; border-radius: 18px; box-shadow: 0 10px 30px rgba(0, 71, 171, 0.08); margin-bottom: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.8); }
+    
+    .wizard-header-title { padding: 30px 20px 20px 20px; text-align: center; font-size: 22px; font-weight: 700; color: #0047AB; background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border-bottom: 1px solid #eef2f6; }
+    .system-logo { max-height: 95px; display: block; margin: 0 auto 12px auto; object-fit: contain; filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.12)); }
+    
+    /* แถบหัวข้อหลักสำหรับประชาชน */
+    .citizen-banner { background: linear-gradient(135deg, #0047AB 0%, #1e40af 100%); color: white; padding: 16px 25px; text-align: center; font-size: 19px; font-weight: bold; letter-spacing: 0.3px; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(0, 71, 171, 0.15); }
+    
+    .citizen-prompt-box { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border-left: 6px solid #2563eb; padding: 16px 20px; border-radius: 12px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08); }
+    .citizen-prompt-text { font-size: 18px; font-weight: 700; color: #1e3a8a; display: flex; align-items: center; gap: 10px; }
+    .sample-status-badge { font-size: 13px; background: #dcfce7; color: #166534; padding: 6px 12px; border-radius: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; border: 1px solid #bbf7d0; }
+
+    /* ส่วนปุ่มใช้งานบ่อย 5 อันดับแรก */
+    .frequent-topics-section { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px 20px; margin-bottom: 24px; }
+    .frequent-title { font-size: 15px; font-weight: 700; color: #334155; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .frequent-title span.badge-hot { background: linear-gradient(135deg, #ef4444 0%, #f97316 100%); color: white; font-size: 11px; padding: 3px 8px; border-radius: 12px; font-weight: bold; }
+    .frequent-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .btn-freq-topic { background: #ffffff; color: #1e40af; border: 1.5px solid #bfdbfe; padding: 10px 16px; border-radius: 50px; font-family: 'Sarabun'; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.25s ease; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0, 71, 171, 0.05); text-align: left; }
+    .btn-freq-topic:hover { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff; border-color: #1d4ed8; transform: translateY(-2px); box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25); }
+    .btn-freq-topic.active { background: linear-gradient(135deg, #0047AB 0%, #1e3a8a 100%); color: #ffffff; border-color: #1e3a8a; box-shadow: 0 4px 12px rgba(0, 71, 171, 0.3); }
+    .btn-freq-topic .freq-rank { background: #dbeafe; color: #1e40af; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; transition: 0.2s; }
+    .btn-freq-topic:hover .freq-rank, .btn-freq-topic.active .freq-rank { background: rgba(255,255,255,0.25); color: #fff; }
+
+    /* สไตล์สำหรับระบบหลังบ้านเจ้าหน้าที่ */
+    .wizard-steps { display: flex; background: #0f172a; color: white; border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+    .step-indicator { flex: 1; text-align: center; padding: 12px; font-weight: bold; opacity: 0.6; border-bottom: 4px solid transparent; transition: 0.3s; font-size: 15px; cursor: pointer; user-select: none; }
+    .step-indicator:hover { opacity: 0.9; background: rgba(255,255,255,0.05); }
+    .step-indicator.active { opacity: 1; border-bottom-color: #f39c12; background: rgba(255,255,255,0.12); }
+    
+    .main-content-box { padding: 28px 30px; }
+    .admin-step-content { display: none; padding: 10px 5px; }
+    .admin-step-content.active { display: block; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .section-subtitle { margin-top: 0; color: #1e293b; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 18px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+    .input-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 16px; }
+    .input-item { flex: 1; min-width: 140px; display: flex; flex-direction: column; }
+    .input-item label { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #475569; }
+    .input-item input, .input-item select, .input-item textarea { padding: 12px 14px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-family: 'Sarabun'; font-size: 15px; width: 100%; transition: all 0.25s ease; background-color: #f8fafc; color: #0f172a; }
+    .input-item input:focus, .input-item select:focus, .input-item textarea:focus { border-color: #2563eb; background-color: #fff; outline: none; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); }
+    
+    .step-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 25px; border-top: 1px solid #eef2f6; padding-top: 22px; flex-wrap: wrap; gap: 12px; }
+    .action-group { display: flex; gap: 12px; flex-wrap: wrap; justify-content: flex-end; flex: 1; }
+    
+    .btn { color: white; padding: 13px 22px; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; font-family: 'Sarabun'; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .btn-next, .btn-submit { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3); } 
+    .btn-next:hover, .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4); }
+    .btn-prev { background-color: #64748b; } .btn-prev:hover { background-color: #475569; transform: translateY(-1px); }
+    .btn-skip { background-color: #f59e0b; color: #fff; } .btn-skip:hover { background-color: #d97706; transform: translateY(-1px); }
+    .btn-sample { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); color: white; } .btn-sample:hover { transform: translateY(-1px); }
+    
+    .controls { display: none; width: 100%; max-width: 900px; flex-direction: column; gap: 15px; margin-bottom: 20px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .controls-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; width: 100%; }
+    .btn-zoom { background-color: #e83e8c; font-size: 18px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.15); border-radius: 8px; } .btn-zoom:hover { background-color: #d82a7a; }
+    .btn-print { background-color: #007bff; } .btn-print:hover { background-color: #0056b3; }
+    
+    .btn-jpeg { background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%); border: none; box-shadow: 0 4px 10px rgba(23,162,184,0.3); color: white; }
+    .btn-jpeg:hover { background: linear-gradient(135deg, #138496 0%, #1aa179 100%); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(23,162,184,0.5); }
+    
+    .btn-save { background-color: #28a745; } .btn-save:hover { background-color: #218838; }
+    .btn-search { background-color: #6f42c1; } .btn-search:hover { background-color: #59339d; }
+    .btn-back { background-color: #dc3545; display: none; width: 100%; max-width: 900px; margin-bottom: 15px; justify-content: center; }
+
+    /* =========================================================================
+       ส่วนของการแสดงตัวอย่าง (คงค่าหน้าจอและพิกัดเดิมทั้งหมด ห้ามแก้ไข)
+       ========================================================================= */
+    .a4-wrapper { width: 100%; max-width: 794px; margin: 0 auto 20px auto; position: relative; display: none; overflow: hidden; }
+    .a4-preview { width: 794px; height: 1123px; background-color: white; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.2); overflow: hidden; transform-origin: top left; }
+    .bg-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+    .overlay-text { position: absolute; font-size: 16px; color: #0000FF; line-height: 1.5; white-space: pre-wrap; z-index: 2; }
+    
+    #out_rawang { top: 92px; left: 510px; } #out_t_tambon { top: 92px; left: 660px; } #out_land_no { top: 119px; left: 490px; } #out_survey_no { top: 119px; left: 660px; } #out_t_amphur { top: 147px; left: 490px; } #out_chanote_no { top: 147px; left: 660px; } #out_t_province { top: 175px; left: 480px; } #out_subject { top: 204px; left: 160px; } #out_written_at { top: 232px; left: 500px; } #out_day { top: 260px; left: 440px; } #out_month { top: 260px; left: 520px; } #out_year { top: 260px; left: 660px; }
+    #out_g1_name { top: 288px; left: 280px; } #out_g1_age { top: 317px; left: 470px; } #out_g1_race { top: 317px; left: 550px; } #out_g1_nation { top: 317px; left: 650px; } #out_g1_father { top: 345px; left: 180px; } #out_g1_mother { top: 345px; left: 440px; } #out_g1_house_no { top: 373px; left: 180px; } #out_g1_moo { top: 373px; left: 280px; } #out_g1_soi { top: 373px; left: 420px; } #out_g1_road { top: 373px; left: 570px; } #out_g1_tambon { top: 402px; left: 180px; } #out_g1_amphur { top: 402px; left: 400px; } #out_g1_province { top: 402px; left: 580px; } #out_g1_tel { top: 430px; left: 180px; }
+    #out_g2_name { top: 459px; left: 190px; } #out_g2_age { top: 487px; left: 470px; } #out_g2_race { top: 487px; left: 550px; } #out_g2_nation { top: 487px; left: 650px; } #out_g2_father { top: 516px; left: 180px; } #out_g2_mother { top: 516px; left: 440px; } #out_g2_house_no { top: 544px; left: 180px; } #out_g2_moo { top: 544px; left: 280px; } #out_g2_soi { top: 544px; left: 420px; } #out_g2_road { top: 544px; left: 570px; } #out_g2_tambon { top: 573px; left: 180px; } #out_g2_amphur { top: 573px; left: 400px; } #out_g2_province { top: 573px; left: 580px; } #out_g2_tel { top: 601px; left: 180px; }
+    #out_g1_id_1{top:317px; left:210px;} #out_g1_id_2{top:317px; left:228px;} #out_g1_id_3{top:317px; left:246px;} #out_g1_id_4{top:317px; left:264px;} #out_g1_id_5{top:317px; left:282px;} #out_g1_id_6{top:317px; left:300px;} #out_g1_id_7{top:317px; left:318px;} #out_g1_id_8{top:317px; left:336px;} #out_g1_id_9{top:317px; left:354px;} #out_g1_id_10{top:317px; left:372px;} #out_g1_id_11{top:317px; left:390px;} #out_g1_id_12{top:317px; left:408px;} #out_g1_id_13{top:317px; left:426px;}
+    #out_g2_id_1{top:487px; left:210px;} #out_g2_id_2{top:487px; left:228px;} #out_g2_id_3{top:487px; left:246px;} #out_g2_id_4{top:487px; left:264px;} #out_g2_id_5{top:487px; left:282px;} #out_g2_id_6{top:487px; left:300px;} #out_g2_id_7{top:487px; left:318px;} #out_g2_id_8{top:487px; left:336px;} #out_g2_id_9{top:487px; left:354px;} #out_g2_id_10{top:487px; left:372px;} #out_g2_id_11{top:487px; left:390px;} #out_g2_id_12{top:487px; left:408px;} #out_g2_id_13{top:487px; left:426px;}
+    #out_management { position: absolute; top: 658px; left: 71px; width: 733px; height: 112px; line-height: 28px; text-indent: 145px; text-align: justify; text-justify: inter-word; word-wrap: break-word; overflow: hidden; }
+
+    #out_watermark_title { position: absolute; top: 80px; left: 0; width: 100%; text-align: center; font-size: 32px; color: red; font-weight: bold; z-index: 3; }
+    #out_doc_footer { position: absolute; top: 15px; left: 0; width: 100%; text-align: center; font-size: 10px; color: #666; z-index: 3; }
+
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 12px; }
+    .modal-content { background: white; padding: 24px; border-radius: 16px; width: 100%; max-width: 750px; max-height: 90vh; display: flex; flex-direction: column; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+    
+    .modal-zoom { background: #111; padding: 0; z-index: 2000; display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: auto; -webkit-overflow-scrolling: touch; }
+    .zoom-close-btn { position: fixed; top: 15px; right: 15px; z-index: 2001; background: rgba(0,0,0,0.7); color: white; border: 1px solid white; border-radius: 20px; padding: 10px 20px; font-weight: bold; cursor: pointer; }
+
+    .search-box { display: flex; gap: 10px; margin-bottom: 15px; }
+    .search-box input { flex: 1; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-family: 'Sarabun'; }
+    .result-list { overflow-y: auto; flex: 1; }
+    .result-item { border: 1px solid #e2e8f0; padding: 12px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .result-item:hover { background-color: #f1f8ff; border-color: #007bff; }
+
+    .web-footer { text-align: center; font-size: 14px; color: #64748b; margin-top: 10px; margin-bottom: 20px; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      .top-actions { flex-direction: column; align-items: stretch; }
+      .wizard-container { border-radius: 16px; }
+      .main-content-box { padding: 20px 15px; }
+      .citizen-banner { font-size: 16px; padding: 14px 15px; }
+      .citizen-prompt-text { font-size: 16px; }
+      
+      .wizard-steps { overflow-x: auto; white-space: nowrap; }
+      .step-indicator { flex: 0 0 auto; padding: 12px 16px; font-size: 14px; }
+      
+      .input-item { flex: 1 1 100% !important; margin-bottom: 4px; }
+      .input-item input, .input-item select, .input-item textarea {
+        padding: 12px 15px;
+        border-radius: 10px;
+        font-size: 16px; 
+      }
+      
+      .frequent-grid { flex-direction: column; }
+      .btn-freq-topic { width: 100%; justify-content: flex-start; border-radius: 12px; padding: 12px 16px; }
+      
+      .step-actions { flex-direction: column; gap: 12px; align-items: stretch; margin-top: 15px; }
+      .step-actions .action-group { flex-direction: column; width: 100%; display: flex; gap: 10px; }
+      
+      .btn { width: 100%; padding: 14px; border-radius: 12px; font-size: 15px; }
+      .controls { padding: 15px; border-radius: 16px; }
+      .controls-row { flex-direction: column; }
+      .controls-row > div { width: 100%; flex-direction: column; gap: 10px; }
+      .search-box { flex-direction: column; }
+      .btn-download-blank { font-size: 16px; padding: 14px; border-radius: 12px; }
+      .wizard-header-title { font-size: 18px; padding: 20px 15px 15px 15px; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 0; }
+      body { background: #fff !important; padding: 0; margin: 0; align-items: flex-start; }
+      .top-actions, .wizard-container, .controls, .btn-back, .web-footer, .modal, .modal-zoom { display: none !important; }
+      .a4-wrapper { display: block !important; max-width: none !important; width: 210mm !important; height: 297mm !important; margin: 0 !important; overflow: visible !important; }
+      .a4-preview { box-shadow: none; margin: 0; transform: scale(1) !important; width: 210mm !important; height: 297mm !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .bg-img { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-actions">
+  <a href="https://drive.google.com/file/d/1ySh4MPE-RPjvbjzgXz1ExPH1Jh_2fyHW/view" target="_blank" class="btn-download-blank">
+    📝 ดาวน์โหลดแบบฟอร์มหนังสือมอบอำนาจเปล่า (ท.ด.21)
+  </a>
+  <button class="btn-admin-top" onclick="openAdminSystem()">
+    ⚙️ สำหรับเจ้าหน้าที่ (ตั้งค่าข้อมูลตัวอย่าง)
+  </button>
+</div>
+
+<button class="btn btn-back" id="btnBack" onclick="togglePreview(false)">🔙 กลับไปเลือกเรื่องมอบอำนาจ</button>
+
+<div class="controls" id="controlPanel">
+  <button class="btn btn-zoom" id="btnZoom" onclick="openZoomMode()">🔍 กดเพื่อดูภาพแบบเต็มจอบนสมาร์ทโฟน</button>
+  
+  <div class="controls-row">
+    <div style="display: flex; gap: 10px; flex: 1;">
+      <a href="https://drive.google.com/file/d/1ySh4MPE-RPjvbjzgXz1ExPH1Jh_2fyHW/view" target="_blank" class="btn" style="background-color: #f39c12; color: white; text-decoration: none; flex: 1; text-align: center;">📝 ดาวน์โหลด ท.ด.21</a>
+      <button class="btn btn-jpeg" style="flex: 1;" onclick="downloadJpeg()">📸 Save เป็นรูปภาพ</button>
+      <button class="btn btn-print" style="flex: 1;" onclick="window.print()">🖨️ ปริ้นตัวอย่าง</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     หน้าหลักสำหรับประชาชน: มีเฉพาะ "เรื่องและอำนาจจัดการแทน" และปุ่มใช้งานบ่อย 5 ปุ่ม
+     ========================================================================= -->
+<div class="wizard-container" id="wizardSection" oninput="updatePreview()" onchange="updatePreview()">
+  <div class="wizard-header-title">
+    <img src="https://lh3.googleusercontent.com/d/1ayKAH5sRugtTpOIf0-zS1zA6-GQceP7I" alt="โลโก้สำนักงานที่ดิน" class="system-logo" crossorigin="anonymous">
+    ระบบสร้างตัวอย่างการเขียนหนังสือมอบอำนาจ<br>สำนักงานที่ดินจังหวัดลำปาง สาขาแม่ทะ
+  </div>
+  
+  <div class="citizen-banner">
+    📋 เรื่องและอำนาจจัดการแทน
+  </div>
+
+  <div class="main-content-box">
+    <!-- กล่องข้อความแจ้งประชาชน -->
+    <div class="citizen-prompt-box">
+      <div class="citizen-prompt-text">
+        <span>👉 กรุณาเลือก เรื่อง ที่ท่านต้องการมอบอำนาจ</span>
+      </div>
+      <div class="sample-status-badge" id="sampleStatusBadge">
+        ⏳ กำลังเชื่อมต่อฐานข้อมูล...
+      </div>
+    </div>
+
+    <!-- ส่วนปุ่มใช้งานบ่อย 5 อันดับแรกอัตโนมัติ -->
+    <div class="frequent-topics-section">
+      <div class="frequent-title">
+        🔥 เรื่องที่มีผู้ใช้งานบ่อยที่สุด (กดเลือกอัตโนมัติ) <span class="badge-hot">TOP 5</span>
+      </div>
+      <div class="frequent-grid" id="frequentTopicsContainer">
+        <span style="color: #64748b; font-size: 14px;">⏳ กำลังโหลดรายการเรื่องยอดนิยม...</span>
+      </div>
+    </div>
+
+    <!-- ส่วนเลือกเรื่องและอำนาจจัดการ -->
+    <h4 class="section-subtitle">📌 หรือค้นหาจากหมวดหมู่เรื่องและอำนาจจัดการแทน</h4>
+    <div class="input-row">
+      <div class="input-item">
+        <label>1. ประเภทคำขอ</label>
+        <select id="dd_category" onchange="updateProcessDropdown()">
+          <option value="">-- กำลังโหลดข้อมูล --</option>
+        </select>
+      </div>
+      <div class="input-item">
+        <label>2. ขั้นตอน</label>
+        <select id="dd_process" onchange="updateTopicDropdown()">
+          <option value="">-- เลือกขั้นตอน --</option>
+        </select>
+      </div>
+      <div class="input-item">
+        <label>3. เรื่องที่ต้องการมอบอำนาจ</label>
+        <select id="dd_topic" onchange="onUserSelectTopicDropdown()">
+          <option value="">-- เลือกเรื่อง --</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div class="input-item">
+        <label>รายละเอียดอำนาจจัดการแทน (สามารถปรับแก้ข้อความเพิ่มเติมได้)</label>
+        <textarea id="managementDetail" rows="5" placeholder="เมื่อท่านเลือกเรื่องแล้ว รายละเอียดการเขียนอำนาจจัดการจะแสดงที่นี่โดยอัตโนมัติ..."></textarea>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div class="input-item">
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #b91c1c; font-weight: bold; background: #fef2f2; padding: 14px 16px; border-radius: 10px; border: 1.5px solid #fecaca; font-size: 15px;">
+          <input type="checkbox" id="in_agent_both" onchange="updatePreview()" style="width: 22px; height: 22px; cursor: pointer;">
+          กรณีผู้รับมอบอำนาจเป็นตัวแทนอีกฝ่ายหนึ่งด้วย (คลิกเพื่อเพิ่มข้อความยินยอมต่อท้ายอัตโนมัติ)
+        </label>
+      </div>
+    </div>
+
+    <div class="step-actions">
+      <button class="btn btn-prev" onclick="document.getElementById('instructionOverlay').style.display='flex'">📖 อ่านคำแนะนำอีกครั้ง</button>
+      <div class="action-group">
+        <button class="btn btn-submit" style="font-size: 18px; padding: 15px 32px;" onclick="generateCitizenPreview()">
+          ✨ ดูตัวอย่างหนังสือมอบอำนาจ
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     ส่วนแสดงตัวอย่างกระดาษ A4 (คงเดิมทุกประการตามข้อ 4)
+     ========================================================================= -->
+<div class="a4-wrapper" id="previewWrapper">
+  <div class="a4-preview" id="previewArea">
+    <img src="https://lh3.googleusercontent.com/d/1WwCwxqQYRQOYiammhQ-vTmcLOAQAXleK" class="bg-img" alt="แบบฟอร์มหนังสือมอบอำนาจ" crossorigin="anonymous">
+    
+    <div id="out_watermark_title">ตัวอย่างการเขียนหนังสือมอบอำนาจ</div>
+    <span class="overlay-text" id="out_rawang"></span><span class="overlay-text" id="out_t_tambon"></span><span class="overlay-text" id="out_land_no"></span><span class="overlay-text" id="out_survey_no"></span><span class="overlay-text" id="out_t_amphur"></span><span class="overlay-text" id="out_chanote_no"></span><span class="overlay-text" id="out_t_province"></span><span class="overlay-text" id="out_subject"></span><span class="overlay-text" id="out_written_at"></span><span class="overlay-text" id="out_day"></span><span class="overlay-text" id="out_month"></span><span class="overlay-text" id="out_year"></span>
+    <span class="overlay-text" id="out_g1_name"></span><span class="overlay-text" id="out_g1_age"></span><span class="overlay-text" id="out_g1_race"></span><span class="overlay-text" id="out_g1_nation"></span><span class="overlay-text" id="out_g1_father"></span><span class="overlay-text" id="out_g1_mother"></span><span class="overlay-text" id="out_g1_house_no"></span><span class="overlay-text" id="out_g1_moo"></span><span class="overlay-text" id="out_g1_soi"></span><span class="overlay-text" id="out_g1_road"></span><span class="overlay-text" id="out_g1_tambon"></span><span class="overlay-text" id="out_g1_amphur"></span><span class="overlay-text" id="out_g1_province"></span><span class="overlay-text" id="out_g1_tel"></span>
+    <span class="overlay-text" id="out_g2_name"></span><span class="overlay-text" id="out_g2_age"></span><span class="overlay-text" id="out_g2_race"></span><span class="overlay-text" id="out_g2_nation"></span><span class="overlay-text" id="out_g2_father"></span><span class="overlay-text" id="out_g2_mother"></span><span class="overlay-text" id="out_g2_house_no"></span><span class="overlay-text" id="out_g2_moo"></span><span class="overlay-text" id="out_g2_soi"></span><span class="overlay-text" id="out_g2_road"></span><span class="overlay-text" id="out_g2_tambon"></span><span class="overlay-text" id="out_g2_amphur"></span><span class="overlay-text" id="out_g2_province"></span><span class="overlay-text" id="out_g2_tel"></span>
+    
+    <div class="overlay-text" id="out_management"></div>
+
+    <span class="overlay-text" id="out_g1_id_1"></span><span class="overlay-text" id="out_g1_id_2"></span><span class="overlay-text" id="out_g1_id_3"></span><span class="overlay-text" id="out_g1_id_4"></span><span class="overlay-text" id="out_g1_id_5"></span><span class="overlay-text" id="out_g1_id_6"></span><span class="overlay-text" id="out_g1_id_7"></span><span class="overlay-text" id="out_g1_id_8"></span><span class="overlay-text" id="out_g1_id_9"></span><span class="overlay-text" id="out_g1_id_10"></span><span class="overlay-text" id="out_g1_id_11"></span><span class="overlay-text" id="out_g1_id_12"></span><span class="overlay-text" id="out_g1_id_13"></span>
+    <span class="overlay-text" id="out_g2_id_1"></span><span class="overlay-text" id="out_g2_id_2"></span><span class="overlay-text" id="out_g2_id_3"></span><span class="overlay-text" id="out_g2_id_4"></span><span class="overlay-text" id="out_g2_id_5"></span><span class="overlay-text" id="out_g2_id_6"></span><span class="overlay-text" id="out_g2_id_7"></span><span class="overlay-text" id="out_g2_id_8"></span><span class="overlay-text" id="out_g2_id_9"></span><span class="overlay-text" id="out_g2_id_10"></span><span class="overlay-text" id="out_g2_id_11"></span><span class="overlay-text" id="out_g2_id_12"></span><span class="overlay-text" id="out_g2_id_13"></span>
+    
+    <span class="overlay-text" id="out_doc_footer"></span>
+  </div>
+</div>
+
+<div class="web-footer">
+  <div>จัดทำโดย สำนักงานที่ดินจังหวัดลำปาง สาขาแม่ทะ</div>
+</div>
+
+<!-- =========================================================================
+     หน้าต่าง Modal คำแนะนำเมื่อเปิดระบบขึ้นมา
+     ========================================================================= -->
+<div class="modal" id="instructionOverlay" onclick="this.style.display='none'" style="cursor: pointer; z-index: 1500;">
+  <div class="modal-content" style="max-width: 600px; border: 3px solid #f39c12; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: left; padding: 25px;">
+    <h3 style="margin-top:0; color:#d32f2f; text-align: center; font-size: 20px;">📌 คำแนะนำก่อนนำไปใช้งาน</h3>
+    <p style="font-size: 16px;">โปรดระบุรายละเอียดเพิ่มเติม ตามข้อความ (<span style="color: red; font-weight: bold;">ตัวหนังสือสีแดง</span>) ในหนังสือมอบอำนาจของท่าน</p>
+    <p style="font-size: 16px; line-height: 1.6;">
+      <strong>หมายเหตุ :</strong> <span style="color: blue;">ระบบจะไม่มีการบันทึกข้อมูลส่วนบุคคลของประชาชนไว้ โดยจะแสดงเฉพาะข้อมูลตัวอย่างสมมติเท่านั้น เพื่อคุ้มครองข้อมูลส่วนบุคคล (PDPA)</span> เอกสารนี้เป็นเพียง 
+      <span style="font-size: 18px; font-weight: bold; color: #0047AB; text-decoration: underline;">"ตัวอย่างการเขียนหนังสือมอบอำนาจ"</span> 
+      เท่านั้น ท่านจำเป็นต้องกรอกหรือเขียนลงใน <strong>แบบฟอร์มหนังสือมอบอำนาจ (ท.ด.21)</strong> เองอีกครั้งพร้อมลงนามมอบอำนาจ และแนบเอกสารหลักฐาน ดังนี้
+    </p>
+    <ol style="font-size: 16px; line-height: 1.6; margin-top: -5px;">
+      <li>สำเนาบัตรประจำตัวประชาชนฉบับปัจจุบัน (พร้อมรับรองสำเนาถูกต้อง)</li>
+      <li>สำเนาทะเบียนบ้านฉบับปัจจุบัน (พร้อมรับรองสำเนาถูกต้อง)</li>
+    </ol>
+    <p style="font-size: 14px; color: #d32f2f; font-weight: bold; margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+      *** ทั้งนี้ การมอบอำนาจ เจ้าหน้าที่ต้องตรวจสอบรายละเอียดอีกครั้งเพื่อรักษาสิทธิ์ของผู้มอบอำนาจตามกฎหมาย
+    </p>
+    <div style="text-align: center; margin-top: 15px;">
+      <button class="btn btn-submit" style="width: 100%; max-width: 280px;">รับทราบ / เริ่มเลือกเรื่องมอบอำนาจ</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     หน้าต่าง Modal เข้าสู่ระบบหลังบ้าน (รหัสผ่าน Dol1234)
+     ========================================================================= -->
+<div class="modal" id="adminLoginModal" style="z-index: 1600;">
+  <div class="modal-content" style="max-width: 420px; text-align: center; border-top: 6px solid #0047AB;">
+    <h3 style="margin-top: 0; color: #0047AB; font-size: 20px;">🔒 ระบบหลังบ้านสำหรับเจ้าหน้าที่</h3>
+    <p style="font-size: 14px; color: #64748b; margin-bottom: 20px;">กรุณากรอกรหัสผ่านเพื่อจัดการข้อมูลตัวอย่าง<br>(ส่วนที่ 1 เอกสารสิทธิ์, ส่วนที่ 2 ผู้มอบ, ส่วนที่ 3 ผู้รับมอบ)</p>
+    <input type="password" id="adminPwdInput" placeholder="กรอกรหัสผ่านเจ้าหน้าที่..." style="width: 100%; padding: 12px 15px; font-size: 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; margin-bottom: 18px; text-align: center; font-family: 'Sarabun';" onkeypress="if(event.key === 'Enter') verifyAdminLogin()">
+    <div style="display: flex; gap: 10px;">
+      <button class="btn btn-prev" style="flex: 1;" onclick="document.getElementById('adminLoginModal').style.display='none'">ยกเลิก</button>
+      <button class="btn btn-submit" style="flex: 1;" onclick="verifyAdminLogin()">เข้าสู่ระบบ</button>
+    </div>
+  </div>
+</div>
+
+<!-- =========================================================================
+     หน้าต่าง Modal ระบบหลังบ้านสำหรับเจ้าหน้าที่ (ส่วนที่ 1, 2, 3)
+     ========================================================================= -->
+<div class="modal" id="adminBackendModal" style="z-index: 1550;">
+  <div class="modal-content" style="max-width: 880px;" oninput="updatePreview()" onchange="updatePreview()">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <h3 style="margin: 0; color: #0047AB; font-size: 20px;">⚙️ ระบบหลังบ้านสำหรับเจ้าหน้าที่ (ตั้งค่าข้อมูลตัวอย่าง)</h3>
+        <span style="font-size: 13px; color: #64748b;">ข้อมูลส่วนที่ 1 - 3 ที่บันทึกไว้ล่าสุด จะถูกนำไปแสดงเป็นตัวอย่างมาตรฐานให้ประชาชนอัตโนมัติ</span>
+      </div>
+      <button class="btn btn-prev" style="padding: 8px 16px; font-size: 14px;" onclick="closeAdminBackend()">✖️ ปิดหน้าต่างหลังบ้าน</button>
+    </div>
+
+    <!-- แถบสลับหน้า 1, 2, 3 ในระบบหลังบ้าน -->
+    <div class="wizard-steps">
+      <div class="step-indicator active" id="ind-1" onclick="showAdminStep(1)">1. การกรอกข้อมูลเอกสารสิทธิ์</div>
+      <div class="step-indicator" id="ind-2" onclick="showAdminStep(2)">2. กรอกข้อมูลผู้มอบอำนาจ</div>
+      <div class="step-indicator" id="ind-3" onclick="showAdminStep(3)">3. กรอกข้อมูลผู้รับมอบอำนาจ</div>
+    </div>
+
+    <!-- ส่วนที่ 1: ข้อมูลเอกสารสิทธิ์ -->
+    <div class="admin-step-content active" id="step-1">
+      <h4 class="section-subtitle">ส่วนที่ 1: ข้อมูลเอกสารสิทธิ์ที่ดิน และ วันที่เขียน</h4>
+      <div class="input-row">
+        <div class="input-item"><label>โฉนดที่ดินเลขที่</label><input type="text" id="in_chanote_no"></div>
+        <div class="input-item"><label>ระวาง</label><input type="text" id="in_rawang"></div>
+        <div class="input-item"><label>เลขที่ดิน</label><input type="text" id="in_land_no"></div>
+        <div class="input-item"><label>หน้าสำรวจ</label><input type="text" id="in_survey_no"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>ตำบล</label><input type="text" id="in_t_tambon"></div>
+        <div class="input-item"><label>อำเภอ</label><input type="text" id="in_t_amphur"></div>
+        <div class="input-item"><label>จังหวัด</label><input type="text" id="in_t_province"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>เขียนที่</label><input type="text" id="in_written_at"></div>
+        <div class="input-item" style="flex: 0.5;"><label>วันที่</label><input type="text" id="in_day"></div>
+        <div class="input-item"><label>เดือน</label><input type="text" id="in_month"></div>
+        <div class="input-item" style="flex: 0.5;"><label>พ.ศ.</label><input type="text" id="in_year"></div>
+      </div>
+      <div style="text-align: right; margin-top: 10px;">
+        <button class="btn btn-next" onclick="showAdminStep(2)">ไปส่วนที่ 2 (ผู้มอบอำนาจ) ➡️</button>
+      </div>
+    </div>
+
+    <!-- ส่วนที่ 2: ข้อมูลผู้มอบอำนาจ -->
+    <div class="admin-step-content" id="step-2">
+      <h4 class="section-subtitle">ส่วนที่ 2: ข้อมูลผู้มอบอำนาจ (ข้าพเจ้า)</h4>
+      <div class="input-row">
+        <div class="input-item" style="flex: 2;"><label>ชื่อ-สกุล</label><input type="text" id="in_g1_name"></div>
+        <div class="input-item" style="flex: 2;"><label>เลขบัตรประชาชน (13 หลัก)</label><input type="text" id="in_g1_id" maxlength="13"></div>
+        <div class="input-item" style="flex: 0.5;"><label>อายุ</label><input type="text" id="in_g1_age"></div>
+        <div class="input-item" style="flex: 0.5;"><label>เชื้อชาติ</label><input type="text" id="in_g1_race"></div>
+        <div class="input-item" style="flex: 0.5;"><label>สัญชาติ</label><input type="text" id="in_g1_nation"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>บิดาชื่อ</label><input type="text" id="in_g1_father"></div>
+        <div class="input-item"><label>มารดาชื่อ</label><input type="text" id="in_g1_mother"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>บ้านเลขที่</label><input type="text" id="in_g1_house_no"></div>
+        <div class="input-item"><label>หมู่ที่</label><input type="text" id="in_g1_moo"></div>
+        <div class="input-item"><label>ตรอก/ซอย</label><input type="text" id="in_g1_soi"></div>
+        <div class="input-item"><label>ถนน</label><input type="text" id="in_g1_road"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>ตำบล</label><input type="text" id="in_g1_tambon"></div>
+        <div class="input-item"><label>อำเภอ</label><input type="text" id="in_g1_amphur"></div>
+        <div class="input-item"><label>จังหวัด</label><input type="text" id="in_g1_province"></div>
+        <div class="input-item"><label>โทรศัพท์</label><input type="text" id="in_g1_tel"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button class="btn btn-prev" onclick="showAdminStep(1)">⬅️ ย้อนกลับส่วนที่ 1</button>
+        <button class="btn btn-next" onclick="showAdminStep(3)">ไปส่วนที่ 3 (ผู้รับมอบอำนาจ) ➡️</button>
+      </div>
+    </div>
+
+    <!-- ส่วนที่ 3: ข้อมูลผู้รับมอบอำนาจ -->
+    <div class="admin-step-content" id="step-3">
+      <h4 class="section-subtitle">ส่วนที่ 3: ข้อมูลผู้รับมอบอำนาจ (ได้มอบให้)</h4>
+      <div class="input-row">
+        <div class="input-item" style="flex: 2;"><label>ชื่อ-สกุล</label><input type="text" id="in_g2_name"></div>
+        <div class="input-item" style="flex: 2;"><label>เลขบัตรประชาชน (13 หลัก)</label><input type="text" id="in_g2_id" maxlength="13"></div>
+        <div class="input-item" style="flex: 0.5;"><label>อายุ</label><input type="text" id="in_g2_age"></div>
+        <div class="input-item" style="flex: 0.5;"><label>เชื้อชาติ</label><input type="text" id="in_g2_race"></div>
+        <div class="input-item" style="flex: 0.5;"><label>สัญชาติ</label><input type="text" id="in_g2_nation"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>บิดาชื่อ</label><input type="text" id="in_g2_father"></div>
+        <div class="input-item"><label>มารดาชื่อ</label><input type="text" id="in_g2_mother"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>บ้านเลขที่</label><input type="text" id="in_g2_house_no"></div>
+        <div class="input-item"><label>หมู่ที่</label><input type="text" id="in_g2_moo"></div>
+        <div class="input-item"><label>ตรอก/ซอย</label><input type="text" id="in_g2_soi"></div>
+        <div class="input-item"><label>ถนน</label><input type="text" id="in_g2_road"></div>
+      </div>
+      <div class="input-row">
+        <div class="input-item"><label>ตำบล</label><input type="text" id="in_g2_tambon"></div>
+        <div class="input-item"><label>อำเภอ</label><input type="text" id="in_g2_amphur"></div>
+        <div class="input-item"><label>จังหวัด</label><input type="text" id="in_g2_province"></div>
+        <div class="input-item"><label>โทรศัพท์</label><input type="text" id="in_g2_tel"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+        <button class="btn btn-prev" onclick="showAdminStep(2)">⬅️ ย้อนกลับส่วนที่ 2</button>
+      </div>
+    </div>
+
+    <!-- แถบเครื่องมือบันทึกและค้นหาของเจ้าหน้าที่ -->
+    <div class="step-actions" style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-top: 20px;">
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn btn-sample" onclick="loadSampleData(true)">🔄 ดึงข้อมูลตัวอย่างล่าสุด</button>
+        <button class="btn btn-search" onclick="openSearchModal()">🔍 ค้นหาข้อมูลที่เคยบันทึกไว้</button>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn btn-save" id="btnSaveDB" onclick="saveToDB()">💾 บันทึกเป็นข้อมูลตัวอย่างมาตรฐาน</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-zoom" id="zoomOverlay">
+  <button class="btn zoom-close-btn" onclick="closeZoomMode()">❌ ปิดหน้าต่างซูม</button>
+  <div style="display: flex; justify-content: center; min-width: 100%; padding: 60px 20px 20px 20px;">
+    <img id="highResPreview" src="" alt="Zoomable Preview" style="width: 100%; max-width: 900px; height: auto; box-shadow: 0 0 15px rgba(0,0,0,0.8);">
+  </div>
+</div>
+
+<div class="modal" id="surveyModal">
+  <div class="modal-content" style="max-width: 400px; text-align: center; border: 2px solid #0047AB;">
+    <h3 style="color: #0047AB; margin-top: 0;">📋 แบบประเมินความพึงพอใจ</h3>
+    <p style="font-size: 14px; color: #555;">กรุณาให้คะแนนและข้อเสนอแนะ<br>เพื่อนำไปพัฒนาปรับปรุงระบบต่อไป</p>
+    
+    <div style="margin: 20px 0; display: flex; justify-content: center; gap: 10px; font-size: 35px;">
+      <span style="cursor: pointer; filter: grayscale(100%); transition: 0.2s;" id="star1" onclick="setRating(1)">⭐</span>
+      <span style="cursor: pointer; filter: grayscale(100%); transition: 0.2s;" id="star2" onclick="setRating(2)">⭐</span>
+      <span style="cursor: pointer; filter: grayscale(100%); transition: 0.2s;" id="star3" onclick="setRating(3)">⭐</span>
+      <span style="cursor: pointer; filter: grayscale(100%); transition: 0.2s;" id="star4" onclick="setRating(4)">⭐</span>
+      <span style="cursor: pointer; filter: grayscale(100%); transition: 0.2s;" id="star5" onclick="setRating(5)">⭐</span>
+    </div>
+    <input type="hidden" id="surveyRating" value="0">
+    
+    <textarea id="surveySuggestion" rows="3" placeholder="ข้อเสนอแนะ / คำแนะนำเพิ่มเติม..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: 'Sarabun'; margin-bottom: 15px; resize: none;"></textarea>
+    
+    <button class="btn btn-submit" style="width: 100%; padding: 12px;" onclick="submitSurvey()">📤 ส่งแบบประเมิน</button>
+    <button class="btn btn-prev" style="width: 100%; margin-top: 10px; background-color: #e2e8f0; color: #475569;" onclick="document.getElementById('surveyModal').style.display='none'">✖️ ปิด (ไม่ประเมิน)</button>
+  </div>
+</div>
+
+<div class="modal" id="searchModal" style="z-index: 1700;">
+  <div class="modal-content">
+    <h3 style="margin-top:0; color:#0047AB;">🔍 ค้นหาข้อมูลตัวอย่างที่เคยบันทึกไว้</h3>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="พิมพ์ชื่อ, โฉนด หรือ เรื่อง เพื่อค้นหา..." onkeypress="if(event.key === 'Enter') executeSearch()">
+      <button class="btn btn-search" onclick="executeSearch()">ค้นหา</button>
+      <button class="btn btn-prev" onclick="document.getElementById('searchModal').style.display='none'">ปิด</button>
+    </div>
+    <div id="searchStatus" style="color: blue; font-size: 14px; margin-bottom: 10px;"></div>
+    <div class="result-list" id="resultList"></div>
+  </div>
+</div>
+
+<script>
+  // =========================================================================
+  // 📌 สำคัญ: นำ URL ของ Web App (ที่ได้จากการ Deploy ใน Google Apps Script) มาวางที่นี่
+  // =========================================================================
+  const GAS_WEB_APP_URL = 'วาง_URL_ของ_GOOGLE_APPS_SCRIPT_WEB_APP_ที่นี่';
+
+  let subjectData = [];
+  let topicUsageCounts = {};
+  let adminPassword = '';
+  let surveyTimer = null;
+  let ratingVal = 0;
+
+  // ฟังก์ชันกลางสำหรับเรียกใช้งาน Backend (รองรับทั้งบน GitHub Pages และบน GAS โดยตรง)
+  async function callBackendAPI(action, payload = {}) {
+    // 1. กรณีรันอยู่บน Google Apps Script โดยตรง
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      return new Promise((resolve, reject) => {
+        const runner = google.script.run.withSuccessHandler(resolve).withFailureHandler(reject);
+        if (action === 'init') {
+          runner.getSubjectData();
+        } else if (action === 'getSubjectData') {
+          runner.getSubjectData();
+        } else if (action === 'getTopTopicsCount') {
+          runner.getTopTopicsCount();
+        } else if (action === 'getLatestSampleData') {
+          runner.getLatestSampleData();
+        } else if (action === 'getPositionsFromServer') {
+          runner.getPositionsFromServer();
+        } else if (action === 'recordTopicClick') {
+          runner.recordTopicClick(payload.topicName);
+        } else if (action === 'saveFormData') {
+          runner.saveFormData(payload.formData, payload.password);
+        } else if (action === 'searchFormData') {
+          runner.searchFormData(payload.query);
+        } else if (action === 'saveReportData') {
+          runner.saveReportData(payload.rating, payload.suggestion);
+        }
+      });
+    }
+
+    // 2. กรณีรันอยู่บน GitHub Pages (ใช้ Fetch API แบบ text/plain เพื่อไม่ให้ติด CORS)
+    if (!GAS_WEB_APP_URL || GAS_WEB_APP_URL.includes('วาง_URL')) {
+      console.warn('กรุณาใส่ GAS_WEB_APP_URL ในโค้ด index.html ก่อนใช้งานบน GitHub');
+      return null;
+    }
+
+    const response = await fetch(GAS_WEB_APP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: action, ...payload })
+    });
+    return await response.json();
+  }
+
+  window.onload = async function() {
+    // 1. เปิดหน้าต่างคำแนะนำตั้งแต่เริ่มต้นเข้าหน้าเว็บ
+    document.getElementById('instructionOverlay').style.display = 'flex';
+
+    // ตั้งค่าข้อมูลตัวอย่างเริ่มต้นเผื่อกรณีฐานข้อมูลยังว่าง
+    setDefaultFallbackSample();
+
+    const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date().toLocaleDateString('th-TH', dateOptions);
+    document.getElementById('out_doc_footer').innerText = `จัดทำโดย ระบบสร้างตัวอย่างหนังสือมอบอำนาจอัตโนมัติ สำนักงานที่ดินจังหวัดลำปาง สาขาแม่ทะ เมื่อวันที่ ${formattedDate}`;
+    resizeA4Preview();
+
+    // 2. ดึงข้อมูลทั้งหมดจากระบบหลังบ้าน
+    let badge = document.getElementById('sampleStatusBadge');
+    try {
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        // กรณีรันใน GAS
+        const subjects = await callBackendAPI('getSubjectData');
+        populateDropdowns(subjects);
+        const counts = await callBackendAPI('getTopTopicsCount');
+        topicUsageCounts = counts || {};
+        renderFrequentTopics();
+        loadSampleData(false);
+        const posData = await callBackendAPI('getPositionsFromServer');
+        applyServerPositions(posData);
+      } else {
+        // กรณีรันบน GitHub Pages (เรียก init ครั้งเดียวได้ครบทุกอย่าง รวดเร็วกว่า)
+        const initData = await callBackendAPI('init');
+        if (initData && initData.success) {
+          populateDropdowns(initData.subjects);
+          topicUsageCounts = initData.topCounts || {};
+          renderFrequentTopics();
+          if (initData.latestSample && initData.latestSample.success) {
+            applySampleDataObject(initData.latestSample.data);
+            if (badge) badge.innerHTML = '✅ พร้อมสร้างตัวอย่างทันที';
+          } else {
+            if (badge) badge.innerHTML = '✅ พร้อมใช้งาน (ข้อมูลมาตรฐาน)';
+          }
+          if (initData.positions) {
+            applyServerPositions(initData.positions);
+          }
+        } else {
+          if (badge) badge.innerHTML = '⚠️ รอการตั้งค่าลิงก์ฐานข้อมูล';
+        }
+      }
+    } catch (err) {
+      console.error("Error initializing data:", err);
+      if (badge) badge.innerHTML = '✅ พร้อมใช้งาน';
+    }
+  };
+
+  function applyServerPositions(posData) {
+    if (!posData) return;
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      let savedPosStr = posData.mobile || localStorage.getItem('formPositionsPhone');
+      if (savedPosStr) {
+        try {
+          const positions = typeof savedPosStr === 'string' ? JSON.parse(savedPosStr) : savedPosStr;
+          for (let key in positions) {
+            const el = document.getElementById(key);
+            if (el) { el.style.top = positions[key].top; el.style.left = positions[key].left; }
+          }
+        } catch(e) {}
+      }
+    } else {
+      let savedPosStr = posData.pc;
+      if (savedPosStr) {
+        try {
+          const positions = typeof savedPosStr === 'string' ? JSON.parse(savedPosStr) : savedPosStr;
+          for (let key in positions) {
+            const el = document.getElementById(key);
+            if (el && positions[key].top && positions[key].left) { 
+              el.style.top = positions[key].top; 
+              el.style.left = positions[key].left; 
+            }
+          }
+        } catch(e) {}
+      }
+    }
+  }
+
+  // ตั้งค่าข้อมูลตัวอย่างเริ่มต้นกรณีเจ้าหน้าที่ยังไม่เคยบันทึกใน Sheet
+  function setDefaultFallbackSample() {
+    const defaults = {
+      in_chanote_no: '12345', in_rawang: '5044 I 1234-00', in_land_no: '99', in_survey_no: '888',
+      in_t_tambon: 'แม่ทะ', in_t_amphur: 'แม่ทะ', in_t_province: 'ลำปาง',
+      in_written_at: 'บ้านเลขที่ 111 หมู่ที่ 1 ต.แม่ทะ อ.แม่ทะ จ.ลำปาง', in_day: '1', in_month: 'มกราคม', in_year: '2568',
+      in_g1_name: 'นายสมชาย ใจดี (ตัวอย่าง)', in_g1_id: '1529900000001', in_g1_age: '45', in_g1_race: 'ไทย', in_g1_nation: 'ไทย',
+      in_g1_father: 'นายมี ใจดี', in_g1_mother: 'นางมา ใจดี', in_g1_house_no: '111', in_g1_moo: '1', in_g1_soi: '-', in_g1_road: '-',
+      in_g1_tambon: 'แม่ทะ', in_g1_amphur: 'แม่ทะ', in_g1_province: 'ลำปาง', in_g1_tel: '081-2345678',
+      in_g2_name: 'นางสาวสมหญิง จริงใจ (ตัวอย่าง)', in_g2_id: '1529900000002', in_g2_age: '40', in_g2_race: 'ไทย', in_g2_nation: 'ไทย',
+      in_g2_father: 'นายมั่น จริงใจ', in_g2_mother: 'นางคง จริงใจ', in_g2_house_no: '222', in_g2_moo: '2', in_g2_soi: '-', in_g2_road: '-',
+      in_g2_tambon: 'แม่ทะ', in_g2_amphur: 'แม่ทะ', in_g2_province: 'ลำปาง', in_g2_tel: '089-8765432'
+    };
+    for (let k in defaults) {
+      let el = document.getElementById(k);
+      if (el) el.value = defaults[k];
+    }
+    updatePreview();
+  }
+
+  function applySampleDataObject(rawJson) {
+    let data = typeof rawJson === 'string' ? JSON.parse(rawJson) : rawJson;
+    const allowedFields = [
+      'in_chanote_no', 'in_rawang', 'in_land_no', 'in_survey_no', 'in_t_tambon', 'in_t_amphur', 'in_t_province',
+      'in_written_at', 'in_day', 'in_month', 'in_year',
+      'in_g1_name', 'in_g1_id', 'in_g1_age', 'in_g1_race', 'in_g1_nation', 'in_g1_father', 'in_g1_mother', 'in_g1_house_no', 'in_g1_moo', 'in_g1_soi', 'in_g1_road', 'in_g1_tambon', 'in_g1_amphur', 'in_g1_province', 'in_g1_tel',
+      'in_g2_name', 'in_g2_id', 'in_g2_age', 'in_g2_race', 'in_g2_nation', 'in_g2_father', 'in_g2_mother', 'in_g2_house_no', 'in_g2_moo', 'in_g2_soi', 'in_g2_road', 'in_g2_tambon', 'in_g2_amphur', 'in_g2_province', 'in_g2_tel'
+    ];
+    for(let key in data) { 
+      if (allowedFields.includes(key)) {
+        let el = document.getElementById(key); 
+        if(el && data[key] !== undefined) el.value = data[key] || '';
+      }
+    }
+    updatePreview();
+  }
+
+  // ระบบจัดการหลังบ้านสำหรับเจ้าหน้าที่ (รหัสผ่าน Dol1234)
+  function openAdminSystem() {
+    if (adminPassword === 'Dol1234') {
+      document.getElementById('adminBackendModal').style.display = 'flex';
+    } else {
+      document.getElementById('adminPwdInput').value = '';
+      document.getElementById('adminLoginModal').style.display = 'flex';
+      setTimeout(() => document.getElementById('adminPwdInput').focus(), 100);
+    }
+  }
+
+  function verifyAdminLogin() {
+    const pwd = document.getElementById('adminPwdInput').value.trim();
+    if (pwd === 'Dol1234') {
+      adminPassword = pwd;
+      document.getElementById('adminLoginModal').style.display = 'none';
+      document.getElementById('adminBackendModal').style.display = 'flex';
+      showAdminStep(1);
+    } else {
+      alert('❌ รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง');
+    }
+  }
+
+  function closeAdminBackend() {
+    document.getElementById('adminBackendModal').style.display = 'none';
+    updatePreview();
+  }
+
+  function showAdminStep(step) {
+    for(let i = 1; i <= 3; i++) {
+      document.getElementById(`step-${i}`).classList.remove('active');
+      document.getElementById(`ind-${i}`).classList.remove('active');
+    }
+    document.getElementById(`step-${step}`).classList.add('active');
+    document.getElementById(`ind-${step}`).classList.add('active');
+  }
+
+  // สร้างปุ่มเรื่องที่ใช้งานบ่อย 5 อันดับแรกอัตโนมัติ
+  function renderFrequentTopics() {
+    const container = document.getElementById('frequentTopicsContainer');
+    if (!subjectData || subjectData.length === 0) {
+      container.innerHTML = '<span style="color:#64748b; font-size:14px;">ไม่พบรายการเรื่องในฐานข้อมูล</span>';
+      return;
+    }
+
+    const uniqueTopicsMap = new Map();
+    subjectData.forEach(item => {
+      if (item.topic && !uniqueTopicsMap.has(item.topic)) {
+        uniqueTopicsMap.set(item.topic, item);
+      }
+    });
+    const allTopics = Array.from(uniqueTopicsMap.values());
+
+    allTopics.sort((a, b) => {
+      const countA = topicUsageCounts[a.topic] || 0;
+      const countB = topicUsageCounts[b.topic] || 0;
+      return countB - countA;
+    });
+
+    const top5 = allTopics.slice(0, 5);
+    container.innerHTML = '';
+
+    const currentSelectedTopic = document.getElementById('dd_topic').value;
+
+    top5.forEach((item, index) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-freq-topic' + (currentSelectedTopic === item.topic ? ' active' : '');
+      btn.innerHTML = `<span class="freq-rank">${index + 1}</span> <span>${item.topic}</span>`;
+      btn.onclick = function() {
+        selectFrequentTopic(item);
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  function selectFrequentTopic(item) {
+    if (!item) return;
+
+    const ddCat = document.getElementById('dd_category');
+    ddCat.value = item.category;
+    updateProcessDropdown();
+
+    const ddProc = document.getElementById('dd_process');
+    ddProc.value = item.process;
+    updateTopicDropdown();
+
+    const ddTop = document.getElementById('dd_topic');
+    ddTop.value = item.topic;
+    fillManagementDetail();
+
+    recordTopicUsage(item.topic);
+  }
+
+  function onUserSelectTopicDropdown() {
+    fillManagementDetail();
+    const topicVal = document.getElementById('dd_topic').value;
+    if (topicVal) {
+      recordTopicUsage(topicVal);
+    }
+  }
+
+  function recordTopicUsage(topicName) {
+    if (!topicName) return;
+    topicUsageCounts[topicName] = (topicUsageCounts[topicName] || 0) + 1;
+    renderFrequentTopics();
+    callBackendAPI('recordTopicClick', { topicName: topicName }).catch(() => {});
+  }
+
+  function populateDropdowns(data) {
+    if (!data) return;
+    subjectData = data;
+    const ddCategory = document.getElementById('dd_category');
+    ddCategory.innerHTML = '<option value="">-- เลือกประเภทคำขอ --</option>';
+    const categories = [...new Set(data.map(item => item.category).filter(c => c))];
+    categories.forEach(c => {
+      let option = document.createElement('option');
+      option.value = c; option.text = c;
+      ddCategory.add(option);
+    });
+  }
+
+  function updateProcessDropdown() {
+    const cat = document.getElementById('dd_category').value;
+    const ddProcess = document.getElementById('dd_process');
+    const ddTopic = document.getElementById('dd_topic');
+    ddProcess.innerHTML = '<option value="">-- เลือกขั้นตอน --</option>';
+    ddTopic.innerHTML = '<option value="">-- เลือกเรื่อง --</option>';
+    document.getElementById('managementDetail').value = '';
+    updatePreview();
+    if (!cat) return;
+    const processes = [...new Set(subjectData.filter(item => item.category === cat).map(item => item.process).filter(p => p))];
+    processes.forEach(p => {
+      let option = document.createElement('option');
+      option.value = p; option.text = p;
+      ddProcess.add(option);
+    });
+  }
+
+  function updateTopicDropdown() {
+    const cat = document.getElementById('dd_category').value;
+    const proc = document.getElementById('dd_process').value;
+    const ddTopic = document.getElementById('dd_topic');
+    ddTopic.innerHTML = '<option value="">-- เลือกเรื่อง --</option>';
+    document.getElementById('managementDetail').value = '';
+    updatePreview();
+    if (!cat || !proc) return;
+    const topics = subjectData.filter(item => item.category === cat && item.process === proc);
+    topics.forEach(t => {
+      let option = document.createElement('option');
+      option.value = t.topic; option.text = t.topic;
+      ddTopic.add(option);
+    });
+  }
+
+  function fillManagementDetail() {
+    const cat = document.getElementById('dd_category').value;
+    const proc = document.getElementById('dd_process').value;
+    const topicVal = document.getElementById('dd_topic').value;
+    if(cat && proc && topicVal) {
+      const item = subjectData.find(i => i.category === cat && i.process === proc && i.topic === topicVal);
+      if(item) document.getElementById('managementDetail').value = item.detail;
+    } else {
+      document.getElementById('managementDetail').value = "";
+    }
+    updatePreview();
+  }
+
+  function generateCitizenPreview() {
+    const topicVal = document.getElementById('dd_topic').value;
+    const mngVal = document.getElementById('managementDetail').value.trim();
+    if (!topicVal && !mngVal) {
+      alert('กรุณาเลือก "เรื่อง" ที่ท่านต้องการมอบอำนาจ หรือกดเลือกจากปุ่มเรื่องใช้งานบ่อยด้านบนก่อนครับ');
+      return;
+    }
+    togglePreview(true);
+  }
+
+  function resizeA4Preview() {
+    const wrapper = document.getElementById('previewWrapper');
+    const preview = document.getElementById('previewArea');
+    if (wrapper && preview) {
+      const wrapperWidth = wrapper.clientWidth;
+      const a4Width = 794; 
+      const a4Height = 1123; 
+      if (wrapperWidth > 0 && wrapperWidth < a4Width) {
+        const scale = wrapperWidth / a4Width;
+        preview.style.transform = `scale(${scale})`;
+        preview.style.transformOrigin = 'top left';
+        wrapper.style.height = `${a4Height * scale}px`; 
+      } else {
+        preview.style.transform = 'scale(1)';
+        preview.style.transformOrigin = 'top left';
+        wrapper.style.height = `${a4Height}px`;
+      }
+    }
+  }
+  window.addEventListener('resize', resizeA4Preview);
+  window.addEventListener('orientationchange', function() { setTimeout(resizeA4Preview, 200); });
+
+  function highlightTextInBrackets(text) {
+    if (!text) return '';
+    return text.replace(/([\(\（].*?[\)\）])/g, '<span style="color: red; font-weight: bold;">$1</span>');
+  }
+
+  function applyAutoResize() {
+    const el = document.getElementById('out_management');
+    el.style.fontSize = '16px'; el.style.lineHeight = '28px';
+    let fontSize = 16, lineHeight = 28;
+    while (el.scrollHeight > 112 && fontSize > 8) {
+      fontSize -= 0.2; lineHeight = fontSize * (28 / 16); 
+      el.style.fontSize = fontSize + 'px'; el.style.lineHeight = lineHeight + 'px';
+    }
+  }
+
+  function updatePreview() {
+    const textFields = [
+      'rawang', 't_tambon', 'land_no', 'survey_no', 't_amphur', 'chanote_no', 't_province', 'written_at', 'day', 'month', 'year',
+      'g1_name', 'g1_age', 'g1_race', 'g1_nation', 'g1_father', 'g1_mother', 'g1_house_no', 'g1_moo', 'g1_soi', 'g1_road', 'g1_tambon', 'g1_amphur', 'g1_province', 'g1_tel',
+      'g2_name', 'g2_age', 'g2_race', 'g2_nation', 'g2_father', 'g2_mother', 'g2_house_no', 'g2_moo', 'g2_soi', 'g2_road', 'g2_tambon', 'g2_amphur', 'g2_province', 'g2_tel'
+    ];
+    
+    textFields.forEach(id => {
+      let el = document.getElementById('in_' + id);
+      let val = el ? el.value : '';
+      let outEl = document.getElementById('out_' + id);
+      if(outEl) outEl.innerText = val;
+    });
+
+    const ddTopic = document.getElementById('dd_topic');
+    let subjectText = ddTopic ? (ddTopic.value || '') : '';
+    document.getElementById('out_subject').innerHTML = highlightTextInBrackets(subjectText);
+    
+    let mngText = document.getElementById('managementDetail').value;
+    if (document.getElementById('in_agent_both').checked) {
+      if (mngText.trim() !== "") mngText += " ";
+      mngText += "และยินยอมให้ผู้รับมอบอำนาจเข้าทำการในนามตนเองและเป็นตัวแทนอีกฝ่ายหนึ่งด้วย";
+    }
+    document.getElementById('out_management').innerHTML = highlightTextInBrackets(mngText);
+    applyAutoResize();
+
+    let g1_id = document.getElementById('in_g1_id').value.padEnd(13, ' ');
+    for(let i=1; i<=13; i++) { let el = document.getElementById('out_g1_id_' + i); if(el) el.innerText = g1_id[i-1] !== ' ' ? g1_id[i-1] : ''; }
+    let g2_id = document.getElementById('in_g2_id').value.padEnd(13, ' ');
+    for(let i=1; i<=13; i++) { let el = document.getElementById('out_g2_id_' + i); if(el) el.innerText = g2_id[i-1] !== ' ' ? g2_id[i-1] : ''; }
+  }
+
+  function togglePreview(showPreview) {
+    const formSection = document.getElementById('wizardSection');
+    const controlPanel = document.getElementById('controlPanel');
+    const topActions = document.querySelector('.top-actions');
+    const btnBack = document.getElementById('btnBack');
+    const previewWrapper = document.getElementById('previewWrapper');
+
+    if(showPreview) {
+      formSection.style.display = 'none'; 
+      topActions.style.display = 'none';
+      controlPanel.style.display = 'flex'; 
+      btnBack.style.display = 'flex';
+      previewWrapper.style.display = 'block';
+      updatePreview();
+      window.scrollTo(0, 0);
+      resizeA4Preview();
+      setTimeout(resizeA4Preview, 50); 
+      setTimeout(resizeA4Preview, 200); 
+
+      if(surveyTimer) clearTimeout(surveyTimer);
+      surveyTimer = setTimeout(() => { document.getElementById('surveyModal').style.display = 'flex'; }, 30000); 
+    } else {
+      formSection.style.display = 'block'; 
+      topActions.style.display = 'flex';
+      controlPanel.style.display = 'none'; 
+      btnBack.style.display = 'none';
+      previewWrapper.style.display = 'none';
+      window.scrollTo(0, 0);
+      if(surveyTimer) clearTimeout(surveyTimer);
+    }
+  }
+
+  async function loadSampleData(showAlert) {
+    let badge = document.getElementById('sampleStatusBadge');
+    if (badge) badge.innerHTML = '⏳ กำลังโหลดข้อมูลตัวอย่าง...';
+
+    try {
+      const res = await callBackendAPI('getLatestSampleData');
+      if (res && res.success) {
+        applySampleDataObject(res.data);
+        if (badge) badge.innerHTML = '✅ พร้อมสร้างตัวอย่างทันที';
+        if (showAlert) alert("✅ ดึงข้อมูลตัวอย่างล่าสุดเข้าสู่ฟอร์มหลังบ้านเรียบร้อยแล้ว");
+      } else {
+        if (badge) badge.innerHTML = '✅ พร้อมใช้งาน (ข้อมูลมาตรฐาน)';
+        if (showAlert) alert(res ? res.message : "ยังไม่มีข้อมูลบันทึกไว้ ระบบใช้ข้อมูลตัวอย่างเริ่มต้นแทน");
+      }
+    } catch (err) {
+      if (badge) badge.innerHTML = '✅ พร้อมใช้งาน';
+      if (showAlert) alert("เกิดข้อผิดพลาดในการดึงข้อมูล: " + err.message);
+    }
+  }
+
+  function setRating(val) {
+    ratingVal = val;
+    document.getElementById('surveyRating').value = val;
+    for(let i = 1; i <= 5; i++) { document.getElementById('star' + i).style.filter = i <= val ? 'grayscale(0%)' : 'grayscale(100%)'; }
+  }
+
+  async function submitSurvey() {
+    if(ratingVal === 0) { alert("กรุณาเลือกให้คะแนนดาวก่อนส่งประเมินครับ"); return; }
+    let suggestion = document.getElementById('surveySuggestion').value;
+    let btn = document.querySelector('#surveyModal .btn-submit');
+    let originalText = btn.innerHTML;
+    btn.innerHTML = "⏳ กำลังส่งข้อมูล...";
+    btn.disabled = true;
+    
+    try {
+      await callBackendAPI('saveReportData', { rating: ratingVal, suggestion: suggestion });
+      alert("🙏 ขอบพระคุณสำหรับข้อเสนอแนะและการประเมินครับ");
+      document.getElementById('surveyModal').style.display = 'none';
+    } catch (err) {
+      alert("เกิดข้อผิดพลาด: " + err);
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  }
+
+  function openZoomMode() {
+    const preview = document.getElementById('previewArea');
+    const btn = document.getElementById('btnZoom');
+    const originalText = btn.innerHTML;
+    let viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (viewportMeta) viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+    
+    btn.innerHTML = '⏳ กำลังประมวลผลรูปภาพความละเอียดสูง...';
+    btn.disabled = true;
+    const oldShadow = preview.style.boxShadow;
+    const oldTransform = preview.style.transform; 
+    preview.style.boxShadow = 'none';
+    preview.style.transform = 'scale(1)'; 
+
+    setTimeout(() => {
+      html2canvas(preview, { scale: 2, useCORS: true, allowTaint: false }).then(canvas => {
+        document.getElementById('highResPreview').src = canvas.toDataURL('image/jpeg', 0.9);
+        preview.style.boxShadow = oldShadow;
+        preview.style.transform = oldTransform;
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        document.getElementById('zoomOverlay').style.display = 'block';
+      }).catch(err => {
+        alert("เกิดข้อผิดพลาด: " + err);
+        preview.style.boxShadow = oldShadow;
+        preview.style.transform = oldTransform;
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      });
+    }, 100);
+  }
+
+  function closeZoomMode() {
+    document.getElementById('zoomOverlay').style.display = 'none';
+    let viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (viewportMeta) viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+  }
+
+  function downloadJpeg() {
+    const preview = document.getElementById('previewArea');
+    const oldShadow = preview.style.boxShadow;
+    const oldTransform = preview.style.transform; 
+    preview.style.boxShadow = 'none';
+    preview.style.transform = 'scale(1)'; 
+    html2canvas(preview, { scale: 2, useCORS: true, allowTaint: false }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = 'ตัวอย่างหนังสือมอบอำนาจ.jpg';
+      link.href = canvas.toDataURL('image/jpeg', 0.9);
+      link.click();
+      preview.style.boxShadow = oldShadow;
+      preview.style.transform = oldTransform;
+    });
+  }
+
+  function getFormDataJSON() {
+    const data = {};
+    document.querySelectorAll('input[id^="in_"]').forEach(el => {
+      if (el.type === 'checkbox') data[el.id] = el.checked;
+      else data[el.id] = el.value;
+    });
+    data.category = document.getElementById('dd_category').value;
+    data.process = document.getElementById('dd_process').value;
+    data.topic = document.getElementById('dd_topic').value;
+    data.subjectName = data.topic || 'ข้อมูลตัวอย่างมาตรฐาน'; 
+    data.managementDetail = document.getElementById('managementDetail').value;
+    return data;
+  }
+
+  async function saveToDB() {
+    if(adminPassword !== 'Dol1234') {
+      adminPassword = prompt("กรุณาระบุรหัสผ่านเจ้าหน้าที่ (Dol1234) เพื่อบันทึกข้อมูล:");
+    }
+    if(!adminPassword) return;
+
+    const btn = document.getElementById('btnSaveDB');
+    const origText = btn.innerHTML;
+    btn.innerHTML = '⏳ กำลังบันทึก...';
+    btn.disabled = true;
+
+    const data = getFormDataJSON();
+    try {
+      const res = await callBackendAPI('saveFormData', { formData: data, password: adminPassword });
+      if(res && res.success) {
+        alert("✅ " + res.message);
+        updatePreview();
+      } else { 
+        alert(res ? res.message : "เกิดข้อผิดพลาด"); 
+        adminPassword = ''; 
+      }
+    } catch (err) {
+      alert("เกิดข้อผิดพลาดในการบันทึก: " + err.message);
+    } finally {
+      btn.innerHTML = origText;
+      btn.disabled = false;
+    }
+  }
+
+  function openSearchModal() { document.getElementById('searchModal').style.display = 'flex'; executeSearch(); }
+
+  async function executeSearch() {
+    const query = document.getElementById('searchInput').value;
+    const status = document.getElementById('searchStatus');
+    status.innerText = "กำลังค้นหาข้อมูล...";
+    try {
+      const res = await callBackendAPI('searchFormData', { query: query });
+      if(!res || !res.success) { status.innerText = res ? res.message : "เกิดข้อผิดพลาด"; return; }
+      status.innerText = `พบข้อมูล ${res.data.length} รายการ`;
+      const list = document.getElementById('resultList');
+      list.innerHTML = '';
+      if(res.data.length === 0) { list.innerHTML = '<div style="padding:15px; color:#666; text-align:center;">ไม่พบข้อมูลที่ค้นหา</div>'; return; }
+      res.data.forEach(item => {
+        let div = document.createElement('div');
+        div.className = 'result-item';
+        div.innerHTML = `<strong>โฉนดเลขที่:</strong> ${item.chanote || '-'} <br>
+                         <strong>ผู้มอบ:</strong> ${item.g1 || '-'} &nbsp; <strong>ผู้รับมอบ:</strong> ${item.g2 || '-'} <br>
+                         <strong>เรื่อง:</strong> ${item.subject || '-'} &nbsp; <span style="color:#888; font-size:12px;">(บันทึก: ${item.date || '-'})</span>`;
+        div.onclick = function() { loadRecordToForm(item.json); };
+        list.appendChild(div);
+      });
+    } catch (err) {
+      status.innerText = "เกิดข้อผิดพลาดในการค้นหา: " + err.message;
+    }
+  }
+
+  function loadRecordToForm(jsonInput) {
+    try {
+      let data = typeof jsonInput === 'string' ? JSON.parse(jsonInput) : jsonInput;
+      for(let key in data) { 
+        let el = document.getElementById(key); 
+        if(el) {
+          if (el.type === 'checkbox') el.checked = !!data[key];
+          else el.value = data[key] || '';
+        } 
+      }
+      updatePreview(); 
+      document.getElementById('searchModal').style.display = 'none';
+      alert("✅ ดึงข้อมูลลงแบบฟอร์มหลังบ้านสำเร็จ");
+    } catch(e) { alert("เกิดข้อผิดพลาดในการโหลดข้อมูล: " + e.message); }
+  }
+</script>
+
+</body>
+</html>
